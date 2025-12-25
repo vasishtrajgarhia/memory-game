@@ -55,38 +55,33 @@
     }
 
     #message {
-        margin-top: 15px;
+        margin-top: 20px;
         font-size: 18px;
         color: #2e7d32;
+        min-height: 24px;
     }
 </style>
 </head>
 <body>
 
 <h1>🧠 Gentle Memory Game</h1>
-<p>Take your time. Choose a level and find matching pairs.</p>
+<p>Take your time. Choose a level and match the pairs.</p>
 
 <div id="controls">
     <button onclick="setLevel('easy')">Easy</button>
     <button onclick="setLevel('medium')">Medium</button>
     <button onclick="setLevel('hard')">Hard</button>
-    <button onclick="enableSound()">🔊 Enable Sound</button>
-
 </div>
 
 <div id="game"></div>
-<div id="message"></div>
 
-<!-- Gentle sounds -->
-<audio id="flipSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1a434d5b8f.mp3?filename=click-124467.mp3"></audio>
-<audio id="matchSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2b0d7d2d3f.mp3?filename=success-1-6297.mp3"></audio>
-<audio id="winSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c34f8f2b1.mp3?filename=success-5-6298.mp3"></audio>
+<div id="message">😊 Let’s begin!</div>
 
 <script>
 const levels = {
-    easy: ["🌸","🍎","⭐","🐶"],          // 4 pairs
-    medium: ["🌸","🍎","⭐","🐶","🍌","🐱"], // 6 pairs
-    hard: ["🌸","🍎","⭐","🐶","🍌","🐱","🌼","🍇"] // 8 pairs
+    easy: ["🌸","🍎","⭐","🐶"],                 
+    medium: ["🌸","🍎","⭐","🐶","🍌","🐱"],      
+    hard: ["🌸","🍎","⭐","🐶","🍌","🐱","🌼","🍇"]
 };
 
 let symbols = levels.easy;
@@ -95,10 +90,6 @@ let first = null;
 let second = null;
 let lock = false;
 let matches = 0;
-
-const flipSound = document.getElementById("flipSound");
-const matchSound = document.getElementById("matchSound");
-const winSound = document.getElementById("winSound");
 
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -141,7 +132,6 @@ function startGame() {
 function flip(card) {
     if (lock || card.classList.contains("flipped") || card.classList.contains("matched")) return;
 
-    flipSound.play();
     card.classList.add("flipped");
     card.textContent = card.dataset.sym;
 
@@ -154,20 +144,21 @@ function flip(card) {
 }
 
 function check() {
+    const message = document.getElementById("message");
+
     if (first.dataset.sym === second.dataset.sym) {
-        matchSound.play();
         first.classList.add("matched");
         second.classList.add("matched");
         matches += 2;
+        message.textContent = "👍 Nice! You found a match.";
         reset();
 
         if (matches === cards.length) {
-            winSound.play();
-            document.getElementById("message").textContent =
-                "🎉 Wonderful! You found all the pairs.";
+            message.textContent = "🎉 Wonderful! You matched all the pairs.";
         }
     } else {
         lock = true;
+        message.textContent = "🙂 That’s okay. Try again.";
         setTimeout(() => {
             first.textContent = "❓";
             second.textContent = "❓";
@@ -182,27 +173,10 @@ function reset() {
     [first, second] = [null, null];
     lock = false;
 }
-function enableSound() {
-    flipSound.play().then(() => {
-        flipSound.pause();
-        flipSound.currentTime = 0;
-    });
-    matchSound.play().then(() => {
-        matchSound.pause();
-        matchSound.currentTime = 0;
-    });
-    winSound.play().then(() => {
-        winSound.pause();
-        winSound.currentTime = 0;
-    });
 
-    document.getElementById("message").textContent = "🔊 Sound enabled!";
-}
-
-// Start with easy
+// Start game
 startGame();
 </script>
 
 </body>
 </html>
-
