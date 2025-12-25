@@ -70,6 +70,8 @@
     <button onclick="setLevel('easy')">Easy</button>
     <button onclick="setLevel('medium')">Medium</button>
     <button onclick="setLevel('hard')">Hard</button>
+    <button onclick="enableSound()">🔊 Enable Sound</button>
+
 </div>
 
 <div id="game"></div>
@@ -180,6 +182,22 @@ function reset() {
     [first, second] = [null, null];
     lock = false;
 }
+function enableSound() {
+    flipSound.play().then(() => {
+        flipSound.pause();
+        flipSound.currentTime = 0;
+    });
+    matchSound.play().then(() => {
+        matchSound.pause();
+        matchSound.currentTime = 0;
+    });
+    winSound.play().then(() => {
+        winSound.pause();
+        winSound.currentTime = 0;
+    });
+
+    document.getElementById("message").textContent = "🔊 Sound enabled!";
+}
 
 // Start with easy
 startGame();
@@ -187,3 +205,4 @@ startGame();
 
 </body>
 </html>
+
