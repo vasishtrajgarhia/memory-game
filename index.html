@@ -7,66 +7,204 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f9fbfd;
-            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px;
+            min-height: 100vh;
         }
 
-        h1, h2 {
-            color: #4a6fa5;
+        .container {
+            max-width: 900px;
+        }
+
+        h1 {
+            color: #2c3e50;
             text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
         }
 
         .game-container {
             display: none;
             margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         #home {
             display: block;
         }
 
+        .game-btn {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px auto;
+            display: block;
+            padding: 20px;
+            font-size: 1.3rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .game-btn:hover {
+            transform: scale(1.05);
+        }
+
         .card {
-            width: 110px;
-            height: 110px;
+            width: 90px;
+            height: 90px;
             background: #b8d8f8;
             border-radius: 12px;
-            font-size: 42px;
+            font-size: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             user-select: none;
+            transition: transform 0.2s;
+        }
+
+        .card:active {
+            transform: scale(0.95);
         }
 
         .card.flipped, .card.matched {
             background: #ffffff;
-            border: 2px solid #4a6fa5;
+            border: 3px solid #667eea;
             cursor: default;
         }
 
         #memory-game {
             display: grid;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
+            margin: 20px 0;
         }
 
-        #message, #quiz-message {
+        .message {
             margin-top: 20px;
-            font-size: 18px;
+            font-size: 1.3rem;
             color: #2e7d32;
             text-align: center;
-            min-height: 24px;
+            min-height: 30px;
+            font-weight: bold;
         }
 
         .quiz-option {
-            margin: 10px 0;
-            font-size: 18px;
+            margin: 10px auto;
+            font-size: 1.2rem;
+            padding: 15px;
+            width: 100%;
+            max-width: 400px;
+            display: block;
         }
 
         .btn-primary {
-            background: #4a6fa5;
+            background: #667eea;
             border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+        }
+
+        .btn-secondary {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+        }
+
+        .simon-btn {
+            width: 100px;
+            height: 100px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .word-box {
+            padding: 20px;
+            margin: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 2px solid #ddd;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            gap: 10px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .pattern-cell {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .pattern-cell.active {
+            background: #667eea;
+        }
+
+        .pattern-cell.player-active {
+            background: #4CAF50;
+        }
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .game-desc {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+            
+            .simon-btn {
+                width: 75px;
+                height: 75px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .pattern-grid {
+                grid-template-columns: repeat(3, 60px);
+            }
+
+            .pattern-cell {
+                width: 60px;
+                height: 60px;
+            }
         }
     </style>
 </head>
@@ -74,57 +212,121 @@
 
     <div class="container">
         <h1>🧠 Brain Boost Games</h1>
-        <p class="text-center">Fun and gentle games to stimulate your mind. Designed for seniors and those with Alzheimer's. Take your time and enjoy!</p>
+        <p class="subtitle">Fun exercises to keep your mind active. Take your time and enjoy!</p>
 
         <div id="home" class="text-center">
-            <button class="btn btn-primary btn-lg m-2" onclick="showGame('memory')">Memory Matching</button>
-            <button class="btn btn-primary btn-lg m-2" onclick="showGame('quiz')">Trivia Quiz</button>
-            <button class="btn btn-primary btn-lg m-2" onclick="showGame('simon')">Simon Sequence</button>
+            <button class="btn game-btn" onclick="showGame('memory')">🎴 Memory Matching</button>
+            <button class="btn game-btn" onclick="showGame('quiz')">❓ Trivia Quiz</button>
+            <button class="btn game-btn" onclick="showGame('simon')">🎵 Simon Says</button>
+            <button class="btn game-btn" onclick="showGame('words')">💭 Word Memory</button>
+            <button class="btn game-btn" onclick="showGame('pattern')">🔷 Pattern Memory</button>
         </div>
 
         <!-- Memory Game -->
         <div id="memory" class="game-container">
-            <h2>Memory Matching</h2>
-            <p class="text-center">Match the pairs. Choose a level and take your time.</p>
+            <h2>🎴 Memory Matching</h2>
+            <p class="game-desc">Match the pairs. Take your time!</p>
             <div class="text-center mb-3">
                 <button class="btn btn-primary" onclick="setLevel('easy')">Easy (4 pairs)</button>
                 <button class="btn btn-primary" onclick="setLevel('medium')">Medium (6 pairs)</button>
                 <button class="btn btn-primary" onclick="setLevel('hard')">Hard (8 pairs)</button>
             </div>
             <div id="memory-game"></div>
-            <div id="message">😊 Let’s begin!</div>
+            <div class="message" id="message">😊 Let's begin!</div>
             <button class="btn btn-secondary mt-3" onclick="backToHome()">Back to Home</button>
         </div>
 
         <!-- Quiz Game -->
         <div id="quiz" class="game-container">
-            <h2>Trivia Quiz</h2>
-            <p class="text-center">Answer simple questions. No rush!</p>
-            <div id="quiz-question" class="text-center mb-3"></div>
+            <h2>❓ Trivia Quiz</h2>
+            <p class="game-desc">Answer simple questions. No rush!</p>
+            <div id="quiz-question" class="text-center mb-3" style="font-size:1.3rem;font-weight:bold;"></div>
             <div id="quiz-options" class="text-center"></div>
-            <div id="quiz-message"></div>
+            <div class="message" id="quiz-message"></div>
             <button class="btn btn-secondary mt-3" onclick="backToHome()">Back to Home</button>
         </div>
 
         <!-- Simon Game -->
         <div id="simon" class="game-container">
-            <h2>Simon Sequence</h2>
-            <p class="text-center">Watch the sequence and repeat it. Starts simple.</p>
+            <h2>🎵 Simon Says</h2>
+            <p class="game-desc">Watch and repeat the sequence!</p>
             <div class="text-center mb-3">
                 <button class="btn btn-primary" onclick="startSimon()">Start Game</button>
             </div>
-            <div id="simon-buttons" class="d-flex justify-content-center">
-                <button id="red" class="btn btn-danger m-2" style="width:100px;height:100px;" onclick="playerClick('red')"></button>
-                <button id="green" class="btn btn-success m-2" style="width:100px;height:100px;" onclick="playerClick('green')"></button>
-                <button id="blue" class="btn btn-primary m-2" style="width:100px;height:100px;" onclick="playerClick('blue')"></button>
-                <button id="yellow" class="btn btn-warning m-2" style="width:100px;height:100px;" onclick="playerClick('yellow')"></button>
+            <div id="simon-buttons" class="d-flex justify-content-center flex-wrap">
+                <button class="simon-btn btn-danger" onclick="playerClick('red')"></button>
+                <button class="simon-btn btn-success" onclick="playerClick('green')"></button>
+                <button class="simon-btn btn-primary" onclick="playerClick('blue')"></button>
+                <button class="simon-btn btn-warning" onclick="playerClick('yellow')"></button>
             </div>
-            <div id="simon-message" class="text-center mt-3">😊 Press Start to begin!</div>
+            <div class="message" id="simon-message">😊 Press Start to begin!</div>
+            <button class="btn btn-secondary mt-3" onclick="backToHome()">Back to Home</button>
+        </div>
+
+        <!-- Word Memory Game -->
+        <div id="words" class="game-container">
+            <h2>💭 Word Memory</h2>
+            <p class="game-desc">Remember the words, then recall them!</p>
+            <div id="word-display" class="text-center"></div>
+            <div id="word-input" class="text-center" style="display:none;">
+                <input type="text" id="word-answer" class="form-control" style="max-width:300px;margin:20px auto;font-size:1.2rem;" placeholder="Type a word">
+                <button class="btn btn-primary" onclick="checkWord()">Submit</button>
+                <button class="btn btn-secondary" onclick="skipWord()">Skip</button>
+            </div>
+            <div class="message" id="word-message"></div>
+            <button class="btn btn-primary mt-3" id="start-word-btn" onclick="startWordGame()">Start Game</button>
+            <button class="btn btn-secondary mt-3" onclick="backToHome()">Back to Home</button>
+        </div>
+
+        <!-- Pattern Memory Game -->
+        <div id="pattern" class="game-container">
+            <h2>🔷 Pattern Memory</h2>
+            <p class="game-desc">Watch the pattern, then recreate it!</p>
+            <div class="text-center mb-3">
+                <button class="btn btn-primary" onclick="startPattern()">Start Game</button>
+            </div>
+            <div class="pattern-grid" id="pattern-grid"></div>
+            <div class="message" id="pattern-message">😊 Press Start to begin!</div>
             <button class="btn btn-secondary mt-3" onclick="backToHome()">Back to Home</button>
         </div>
     </div>
 
     <script>
+        // Audio feedback using Web Audio API
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(frequency, duration) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        function playSuccess() {
+            playSound(523.25, 0.2); // C
+            setTimeout(() => playSound(659.25, 0.2), 100); // E
+            setTimeout(() => playSound(783.99, 0.3), 200); // G
+        }
+
+        function playClick() {
+            playSound(440, 0.1);
+        }
+
+        function playEncouragement() {
+            playSound(392, 0.15);
+            setTimeout(() => playSound(523.25, 0.2), 150);
+        }
+
         function showGame(gameId) {
             document.querySelectorAll('.game-container').forEach(el => el.style.display = 'none');
             document.getElementById('home').style.display = 'none';
@@ -132,6 +334,8 @@
             if (gameId === 'memory') startMemoryGame();
             if (gameId === 'quiz') startQuiz();
             if (gameId === 'simon') document.getElementById('simon-message').textContent = '😊 Press Start to begin!';
+            if (gameId === 'words') resetWordGame();
+            if (gameId === 'pattern') document.getElementById('pattern-message').textContent = '😊 Press Start to begin!';
         }
 
         function backToHome() {
@@ -139,7 +343,7 @@
             document.getElementById('home').style.display = 'block';
         }
 
-        // Memory Game Script
+        // Memory Game
         const memoryLevels = {
             easy: ["🌸","🍎","⭐","🐶"],
             medium: ["🌸","🍎","⭐","🐶","🍌","🐱"],
@@ -163,13 +367,14 @@
         function setLevel(level) {
             memorySymbols = memoryLevels[level];
             startMemoryGame();
+            playClick();
         }
 
         function startMemoryGame() {
             const game = document.getElementById("memory-game");
             const message = document.getElementById("message");
             game.innerHTML = "";
-            message.textContent = "😊 Let’s begin!";
+            message.textContent = "😊 Let's begin!";
             memoryMatches = 0;
             memoryFirst = null;
             memorySecond = null;
@@ -179,7 +384,7 @@
             shuffle(memoryCards);
 
             const cols = Math.ceil(Math.sqrt(memoryCards.length));
-            game.style.gridTemplateColumns = `repeat(${cols}, 110px)`;
+            game.style.gridTemplateColumns = `repeat(${cols}, 90px)`;
 
             memoryCards.forEach(sym => {
                 const card = document.createElement("div");
@@ -194,6 +399,7 @@
         function memoryFlip(card) {
             if (memoryLock || card.classList.contains("flipped") || card.classList.contains("matched")) return;
 
+            playClick();
             card.classList.add("flipped");
             card.textContent = card.dataset.sym;
 
@@ -209,25 +415,28 @@
             const message = document.getElementById("message");
 
             if (memoryFirst.dataset.sym === memorySecond.dataset.sym) {
+                playSuccess();
                 memoryFirst.classList.add("matched");
                 memorySecond.classList.add("matched");
                 memoryMatches += 2;
-                message.textContent = "👍 Nice! You found a match.";
+                message.textContent = "👍 Excellent! You found a match!";
                 memoryReset();
 
                 if (memoryMatches === memoryCards.length) {
-                    message.textContent = "🎉 Wonderful! You matched all the pairs.";
+                    message.textContent = "🎉 Wonderful! You matched them all!";
+                    setTimeout(playSuccess, 200);
                 }
             } else {
                 memoryLock = true;
-                message.textContent = "🙂 That’s okay. Try again.";
+                playEncouragement();
+                message.textContent = "🙂 That's okay. Keep trying!";
                 setTimeout(() => {
                     memoryFirst.textContent = "❓";
                     memorySecond.textContent = "❓";
                     memoryFirst.classList.remove("flipped");
                     memorySecond.classList.remove("flipped");
                     memoryReset();
-                }, 1200);
+                }, 1500);
             }
         }
 
@@ -236,13 +445,15 @@
             memoryLock = false;
         }
 
-        // Quiz Game Script
+        // Quiz Game
         const quizQuestions = [
             { question: "What color is the sky on a clear day?", options: ["Blue", "Green", "Red", "Yellow"], answer: "Blue" },
             { question: "How many legs does a dog have?", options: ["2", "4", "6", "8"], answer: "4" },
             { question: "What fruit is yellow and curved?", options: ["Apple", "Banana", "Orange", "Grape"], answer: "Banana" },
             { question: "What animal says 'meow'?", options: ["Dog", "Cat", "Bird", "Fish"], answer: "Cat" },
-            { question: "What is the capital of France?", options: ["London", "Paris", "Berlin", "Madrid"], answer: "Paris" }
+            { question: "What season comes after winter?", options: ["Summer", "Fall", "Spring", "Winter"], answer: "Spring" },
+            { question: "What do bees make?", options: ["Milk", "Honey", "Butter", "Cheese"], answer: "Honey" },
+            { question: "How many sides does a triangle have?", options: ["2", "3", "4", "5"], answer: "3" }
         ];
 
         let currentQuizIndex = 0;
@@ -260,7 +471,8 @@
             if (currentQuizIndex >= quizQuestions.length) {
                 questionEl.textContent = "";
                 optionsEl.innerHTML = "";
-                messageEl.textContent = "🎉 Great job! You finished the quiz.";
+                messageEl.textContent = "🎉 Fantastic! You finished the quiz!";
+                playSuccess();
                 return;
             }
 
@@ -279,33 +491,36 @@
         }
 
         function checkQuizAnswer(selected) {
+            playClick();
             const messageEl = document.getElementById("quiz-message");
             const correct = quizQuestions[currentQuizIndex].answer;
 
             if (selected === correct) {
-                messageEl.textContent = "👍 Correct! Well done.";
+                messageEl.textContent = "👍 Perfect! Well done!";
+                playSuccess();
             } else {
                 messageEl.textContent = "🙂 Nice try! The answer is " + correct + ".";
+                playEncouragement();
             }
 
             setTimeout(() => {
                 currentQuizIndex++;
                 showQuizQuestion();
-            }, 2000);
+            }, 2500);
         }
 
-        // Simon Game Script
+        // Simon Game
         const simonColors = ['red', 'green', 'blue', 'yellow'];
+        const simonFrequencies = { red: 329.63, green: 261.63, blue: 392.00, yellow: 440.00 };
         let simonSequence = [];
         let playerSequence = [];
-        let simonLevel = 1;
         let isPlaying = false;
 
         function startSimon() {
+            playClick();
             simonSequence = [];
             playerSequence = [];
-            simonLevel = 1;
-            document.getElementById('simon-message').textContent = '😊 Watch the sequence!';
+            document.getElementById('simon-message').textContent = '😊 Watch carefully!';
             nextSimonRound();
         }
 
@@ -322,17 +537,21 @@
                 if (i >= simonSequence.length) {
                     clearInterval(interval);
                     isPlaying = false;
-                    document.getElementById('simon-message').textContent = '🙂 Your turn! Repeat the sequence.';
+                    document.getElementById('simon-message').textContent = '🙂 Your turn! Tap the colors.';
                     return;
                 }
                 highlightButton(simonSequence[i]);
                 i++;
-            }, 800);
+            }, 900);
         }
 
         function highlightButton(color) {
-            const btn = document.getElementById(color);
-            btn.style.opacity = 0.5;
+            const btns = document.querySelectorAll('.simon-btn');
+            const colorMap = { red: 0, green: 1, blue: 2, yellow: 3 };
+            const btn = btns[colorMap[color]];
+            
+            playSound(simonFrequencies[color], 0.4);
+            btn.style.opacity = 0.4;
             setTimeout(() => {
                 btn.style.opacity = 1;
             }, 400);
@@ -344,17 +563,185 @@
             highlightButton(color);
 
             if (playerSequence[playerSequence.length - 1] !== simonSequence[playerSequence.length - 1]) {
-                document.getElementById('simon-message').textContent = '🙂 Oops! Try again. Press Start to restart.';
-                isPlaying = true; // Lock until restart
+                document.getElementById('simon-message').textContent = '🙂 Almost! Press Start to try again.';
+                playEncouragement();
+                isPlaying = true;
                 return;
             }
 
             if (playerSequence.length === simonSequence.length) {
-                document.getElementById('simon-message').textContent = '👍 Good! Next level.';
-                simonLevel++;
-                setTimeout(nextSimonRound, 1000);
+                document.getElementById('simon-message').textContent = '👍 Great job! Next level...';
+                playSuccess();
+                setTimeout(nextSimonRound, 1500);
             }
         }
+
+        // Word Memory Game
+        const wordLists = [
+            ["Apple", "Chair", "Dog"],
+            ["Sun", "Book", "Tree", "Car"],
+            ["House", "Bird", "Phone", "Ball", "Hat"]
+        ];
+        let currentWordList = [];
+        let currentWordIndex = 0;
+        let wordsRemembered = 0;
+
+        function resetWordGame() {
+            document.getElementById('word-display').innerHTML = '';
+            document.getElementById('word-input').style.display = 'none';
+            document.getElementById('start-word-btn').style.display = 'block';
+            document.getElementById('word-message').textContent = '';
+        }
+
+        function startWordGame() {
+            playClick();
+            currentWordList = wordLists[Math.floor(Math.random() * wordLists.length)];
+            currentWordIndex = 0;
+            wordsRemembered = 0;
+            document.getElementById('start-word-btn').style.display = 'none';
+            document.getElementById('word-message').textContent = 'Remember these words...';
+            displayWords();
+        }
+
+        function displayWords() {
+            const display = document.getElementById('word-display');
+            display.innerHTML = currentWordList.map(word => 
+                `<div class="word-box">${word}</div>`
+            ).join('');
+
+            setTimeout(() => {
+                display.innerHTML = '<p style="font-size:1.3rem;">Now try to recall the words!</p>';
+                document.getElementById('word-input').style.display = 'block';
+                document.getElementById('word-answer').value = '';
+                document.getElementById('word-answer').focus();
+                document.getElementById('word-message').textContent = '';
+            }, 4000);
+        }
+
+        function checkWord() {
+            const answer = document.getElementById('word-answer').value.trim();
+            const message = document.getElementById('word-message');
+            
+            if (currentWordList.map(w => w.toLowerCase()).includes(answer.toLowerCase())) {
+                playSuccess();
+                message.textContent = '👍 Yes! That was one of them!';
+                wordsRemembered++;
+                currentWordList = currentWordList.filter(w => w.toLowerCase() !== answer.toLowerCase());
+            } else {
+                playEncouragement();
+                message.textContent = '🙂 Not quite, but keep trying!';
+            }
+
+            document.getElementById('word-answer').value = '';
+            
+            if (currentWordList.length === 0) {
+                message.textContent = `🎉 Wonderful! You remembered all ${wordsRemembered} words!`;
+                document.getElementById('word-input').style.display = 'none';
+                document.getElementById('start-word-btn').style.display = 'block';
+            }
+        }
+
+        function skipWord() {
+            playClick();
+            const message = document.getElementById('word-message');
+            message.textContent = `Good effort! You remembered ${wordsRemembered} word${wordsRemembered !== 1 ? 's' : ''}!`;
+            document.getElementById('word-input').style.display = 'none';
+            document.getElementById('start-word-btn').style.display = 'block';
+        }
+
+        // Pattern Memory Game
+        let patternSequence = [];
+        let playerPattern = [];
+        let patternLevel = 3;
+        let isShowingPattern = false;
+
+        function createPatternGrid() {
+            const grid = document.getElementById('pattern-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'pattern-cell';
+                cell.dataset.index = i;
+                cell.onclick = () => patternClick(i);
+                grid.appendChild(cell);
+            }
+        }
+
+        function startPattern() {
+            playClick();
+            createPatternGrid();
+            patternLevel = 3;
+            playerPattern = [];
+            document.getElementById('pattern-message').textContent = '😊 Watch the pattern...';
+            generatePattern();
+        }
+
+        function generatePattern() {
+            patternSequence = [];
+            const cells = Array.from(document.querySelectorAll('.pattern-cell'));
+            cells.forEach(c => c.classList.remove('active', 'player-active'));
+            
+            while (patternSequence.length < patternLevel) {
+                const index = Math.floor(Math.random() * 9);
+                if (!patternSequence.includes(index)) {
+                    patternSequence.push(index);
+                }
+            }
+            
+            showPattern();
+        }
+
+        function showPattern() {
+            isShowingPattern = true;
+            const cells = Array.from(document.querySelectorAll('.pattern-cell'));
+            
+            patternSequence.forEach((index, i) => {
+                setTimeout(() => {
+                    playSound(440 + (i * 50), 0.2);
+                    cells[index].classList.add('active');
+                }, i * 800);
+            });
+
+            setTimeout(() => {
+                cells.forEach(c => c.classList.remove('active'));
+                isShowingPattern = false;
+                document.getElementById('pattern-message').textContent = '🙂 Your turn! Tap the pattern.';
+            }, patternSequence.length * 800 + 800);
+        }
+
+        function patternClick(index) {
+            if (isShowingPattern) return;
+            
+            playClick();
+            const cell = document.querySelectorAll('.pattern-cell')[index];
+            cell.classList.add('player-active');
+            playerPattern.push(index);
+
+            setTimeout(() => cell.classList.remove('player-active'), 300);
+
+            if (playerPattern[playerPattern.length - 1] !== patternSequence[playerPattern.length - 1]) {
+                document.getElementById('pattern-message').textContent = '🙂 Not quite. Press Start to try again!';
+                playEncouragement();
+                return;
+            }
+
+            if (playerPattern.length === patternSequence.length) {
+                playSuccess();
+                document.getElementById('pattern-message').textContent = '👍 Perfect! Next level...';
+                patternLevel = Math.min(patternLevel + 1, 7);
+                setTimeout(() => {
+                    playerPattern = [];
+                    generatePattern();
+                }, 1500);
+            }
+        }
+
+        // Allow Enter key for word game
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('word-answer').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkWord();
+            });
+        });
     </script>
 
 </body>
