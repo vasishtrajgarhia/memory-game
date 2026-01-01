@@ -65,7 +65,7 @@ Watch a visual pattern light up on a grid, then recreate it from memory.
 ## 🚀 How to Use
 
 ### **Online (Recommended)**
-Visit the live demo: `https://yourusername.github.io/brain-boost-games`
+Visit the live demo: `https://vasishtrajgarhia.github.io/memory-game/`
 
 ### **Offline Use**
 1. Download `index.html`
